@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 
 export default {
-  async fetch (request) {
+  async fetch (request, env) {
     if (request.method === "OPTIONS") {
       return handleOPTIONS();
     }
@@ -10,8 +10,23 @@ export default {
       return new Response(err.message, fixCors({ status: err.status ?? 500 }));
     };
     try {
-      const auth = request.headers.get("Authorization");
-      const apiKey = auth?.split(" ")[1];
+      // --- START: API Key 轮询逻辑 (已修改) ---
+      let apiKey;
+      // 忽略 header 中传递的 api key，始终使用 kv 中轮询的 api key
+      const keys = env.GEMINI_API_KEYS?.split(",").filter(k => k.trim());
+      if (!keys || keys.length === 0) {
+        throw new HttpError("API keys are not configured on the worker.", 500);
+      }
+
+      // 从 KV 中获取上次使用的索引
+      let lastUsedIndex = await env.KV.get("last_used_index");
+      let currentIndex = (lastUsedIndex === null) ? 0 : (parseInt(lastUsedIndex, 10) + 1) % keys.length;
+      
+      apiKey = keys[currentIndex];
+
+      // 更新 KV 中的索引以备下次使用
+      await env.KV.put("last_used_index", currentIndex.toString());
+      // --- END: API Key 轮询逻辑 ---
       const assert = (success) => {
         if (!success) {
           throw new HttpError("The specified HTTP method is not allowed for the requested resource", 400);
@@ -68,7 +83,7 @@ const BASE_URL = "https://generativelanguage.googleapis.com";
 const API_VERSION = "v1beta";
 
 // https://github.com/google-gemini/generative-ai-js/blob/cf223ff4a1ee5a2d944c53cddb8976136382bee6/src/requests/request.ts#L71
-const API_CLIENT = "genai-js/0.21.0"; // npm view @google/generative-ai version
+const API_CLIENT = "genai-js/0.21.0"; // npm view /generative-ai version
 const makeHeaders = (apiKey, more) => ({
   "x-goog-api-client": API_CLIENT,
   ...(apiKey && { "x-goog-api-key": apiKey }),

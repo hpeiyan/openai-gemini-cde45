@@ -2,3 +2,11 @@ name = "gemini"
 main = "src/worker.mjs"
 compatibility_date = "2024-09-23"
 compatibility_flags = [ "nodejs_compat" ]
+
+# Add this to your wrangler.toml
+[[kv_namespaces]]
+binding = "KV"
+id = "fa57a088d73c48c9b13221ea2746cbbb"
+
+[vars]
+GEMINI_API_KEYS = "AIzaSyDFH7SoF5GMrF9Pe3gJbie6S9K6iuAPH9k,AIzaSyCksrQ-YLW6SGd7bOWKsVMxUHs9CcUArsg,AIzaSyBr8fsdL_h5NTNowCQxMHJWA5eykI3etOM,AIzaSyCr7F4-8RRW-2Cf131C9G5JQX6ukyL_cH0,AIzaSyBNuPtD1tVkz6wazkN5nF3Tmeo01SPzqP4,AIzaSyA0ayIVbo7SlUAbgKENDwRoIzWaH8APQ98,AIzaSyDEfcMS7713zxa0onPwkyHie3vcTGe5w0M,AIzaSyAfzFI2wOUgW4H4ebX2yuZ-Zv2kd3QHHkM,AIzaSyCbBlXIRmdha6u-iF2ED8tfV6djcqs90bs,AIzaSyBGX-_o2Jy4Oca536OQMepSjQTEbMYlorA,AIzaSyAQN9fLEXapAHyWk2mpn8gxjLqPHSOzSJs,AIzaSyAGFPRbT3o4SZuMRMybYL_zsArPI-waC8c,AIzaSyBESjqV975H9RAZXQz-NgwfdbkMQKZZGGk,AIzaSyCZt_UXnlum29a-KuTcnwhNwnNSKnVax1s,AIzaSyCmO23D4xoqvLdDln0QJdFRp0wBEpRlTmc,AIzaSyAiEineVLnVFQvD7HvCp3YMMldlNDP7Anc,AIzaSyCRXe2mbRUtcf3oNQGKzcePHh1ybBawvfQ,AIzaSyCRLHShR5JB76ag4xc7I6Rnu7QNw_IfptY,AIzaSyCZ14h5dhJ-zijWGModyCOwsSfXLhRKpck,AIzaSyDJc5A53xejnlUhqYHT2kO2q2k2U04-4yc"
