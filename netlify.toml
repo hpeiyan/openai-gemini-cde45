@@ -4,5 +4,7 @@
 [functions]
         node_bundler = "esbuild"
 
-[edge_functions]
-        external_node_modules = ["@netlify/blobs"]
+[[edge_functions]]
+  path = "/edge/*"
+  function = "handler"
+  external_node_modules = ["@netlify/blobs"]
