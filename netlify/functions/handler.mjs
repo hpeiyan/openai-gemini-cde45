@@ -25,5 +25,12 @@ export default async (request, context) => {
     GEMINI_API_KEYS: context.env.GEMINI_API_KEYS,
   };
 
-  return worker.fetch(request, env);
+  // Adjust the request URL to remove the /v1 prefix for the worker
+  const url = new URL(request.url);
+  if (url.pathname.startsWith("/v1")) {
+    url.pathname = url.pathname.substring(3);
+  }
+  const adjustedRequest = new Request(url, request);
+
+  return worker.fetch(adjustedRequest, env);
 };
